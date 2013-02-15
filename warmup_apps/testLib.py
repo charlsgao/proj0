@@ -78,7 +78,7 @@ class RestTestCase(unittest.TestCase):
         
     def setUp(self):
         self.conn = httplib.HTTPConnection(RestTestCase.serverToTest, timeout=1)
-        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        self.makeRequest("/TESTAPI/resetFixture", method="GET")
         
     def tearDown(self):
         self.conn.close ()

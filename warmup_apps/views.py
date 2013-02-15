@@ -12,6 +12,9 @@ empty = UserData()
 @csrf_exempt
 def index(request):
 	if request.method=="GET":
+		if request.path == "/TESTAPI/resetFixture":
+			errorcode = empty.resetFixture()
+			return HttpResponse(json.dumps({'errCode':errorcode}),content_type="application/json" )
 		if request.path in ["/client.html","/client.css","/client.js"]:
 			mime_type="text/html"
 			if request.path.endswith(".css"):
