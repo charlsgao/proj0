@@ -1,0 +1,9 @@
+<div id="welcome-page" class="box">
+  <div id="welcome-message" class="message"></div>
+  <center>
+<div style="color:red;">{{message}}</div>
+    <form method="POST">
+      <input type="submit" id="logout-button" name="logoutTrigger" value="Logout">
+    </form>
+  </center>
+</div>

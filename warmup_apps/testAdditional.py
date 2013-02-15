@@ -1,0 +1,74 @@
+import unittest
+import os
+import testLib
+
+
+SUCCESS               =   1  # : a success
+ERR_BAD_CREDENTIALS   =  -1  # : (for login only) cannot find the user/password pair in the database
+ERR_USER_EXISTS       =  -2  # : (for add only) trying to add a user that already exists
+ERR_BAD_USERNAME      =  -3  # : (for add, or login) invalid user name (only empty string is invalid for now)
+ERR_BAD_PASSWORD      =  -4
+
+class TestAddUser(testLib.RestTestCase):
+    """Test adding users"""
+    def assertResponse(self, respData, count = 1, errCode = SUCCESS):
+
+        expected = { 'errCode' : errCode }
+        if count is not None:
+            expected['count']  = count
+        self.assertDictEqual(expected, respData)
+
+    def test_Add_Successful(self):
+	respData = self.makeRequest("/users/add", method="POST", data = { 'user' : 'user', 'password' : 'psd'} )
+        self.assertResponse(respData, 1, SUCCESS)
+
+    def test_Invalid_UserName(self):
+        respData = self.makeRequest("/users/add", method="POST", data = { 'user' : '', 'password' : 'psd'} )
+        self.assertResponse(respData, None, ERR_BAD_USERNAME)
+
+    def test_Bad_UserName(self):
+	respData = self.makeRequest("/users/add", method="POST", data = { 'user' : '2'*130, 'password' : 'psd'} )
+        self.assertResponse(respData, None, ERR_BAD_USERNAME)
+
+    def test_Bad_Password(self):
+	respData = self.makeRequest("/users/add", method="POST", data = { 'user' : 'user', 'password' : 'p'*129} )
+        self.assertResponse(respData, None, ERR_BAD_PASSWORD)
+
+    def test_Existing_User(self):
+	self.makeRequest("/users/add", method="POST", data = { 'user' : 'user', 'password' : 'psd'} )
+        respData = self.makeRequest("/users/add", method="POST", data = { 'user' : 'user', 'password' : 'psd'} )
+        self.assertResponse(respData, None, ERR_USER_EXISTS)
+
+class TestLogin(testLib.RestTestCase):
+    """Test Login"""
+    def assertResponse(self, respData, count = 1, errCode = SUCCESS):
+        expected = { 'errCode' : errCode }
+        if count is not None:
+            expected['count']  = count
+        self.assertDictEqual(expected, respData)
+
+    def test_Successful_Login(self):
+	self.makeRequest("/users/add", method="POST", data = {'user' : 'user', 'password' : 'psd'})
+	respData = self.makeRequest("/users/login", method="POST", data = {'user' : 'user', 'password' : 'psd'})
+	self.assertResponse(respData, 2, SUCCESS)
+
+    def test_Login_Bad_UserName(self):
+	respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'u'*129, 'password' : 'psd'} )
+        self.assertResponse(respData, None, ERR_BAD_CREDENTIALS)
+
+    def test_Login_Bad_Password(self):
+	respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user', 'password' : 'p'*129} )
+        self.assertResponse(respData, None, ERR_BAD_CREDENTIALS)
+
+    def test_Invalid_Login(self):
+	respData = self.makeRequest("/users/login", method="POST", data = {'user' : '', 'password' : 'psd'})
+	self.assertResponse(respData, None, ERR_BAD_CREDENTIALS)
+
+    def test_Invalid_Password_Login(self):
+	self.makeRequest("/users/add", method="POST", data = {'user' : 'user', 'password' : 'psd'})
+	respData = self.makeRequest("/users/login", method="POST", data = {'user' : 'user', 'password' : 'pwd'})
+	self.assertResponse(respData, None, ERR_BAD_CREDENTIALS)
+
+
+
+	
