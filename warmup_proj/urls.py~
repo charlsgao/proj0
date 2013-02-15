@@ -17,6 +17,5 @@ urlpatterns = patterns('',
     url('', 'warmup_apps.views.index'),
     url(r'', 'warmup_apps.views.index'),
     url(r'^TESTAPI/resetFixture/', 'warmup_apps.views.index'),
-    url(r'^TESTAPI/unitTests/', 'warmup_apps.views.index')
 
 )
