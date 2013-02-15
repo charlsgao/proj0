@@ -36,7 +36,7 @@ class RestTestCase(unittest.TestCase):
         
         headers = { }
         body = ""  
-        if data is not None:
+        if data:
             headers = { "content-type": "application/json" }
             body = json.dumps(data)
 
@@ -47,7 +47,6 @@ class RestTestCase(unittest.TestCase):
                 print "Cannot connect to the server "+RestTestCase.serverToTest+". You should start the server first, or pass the proper TEST_SERVER environment variable"
                 sys.exit(1)
             raise
-
         self.conn.sock.settimeout(100.0) # Give time to the remote server to start and respond
         resp = self.conn.getresponse()
         data_string = "<unknown"
@@ -78,7 +77,7 @@ class RestTestCase(unittest.TestCase):
         
     def setUp(self):
         self.conn = httplib.HTTPConnection(RestTestCase.serverToTest, timeout=1)
-        self.makeRequest("/TESTAPI/resetFixture", method="GET")
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
         
     def tearDown(self):
         self.conn.close ()
