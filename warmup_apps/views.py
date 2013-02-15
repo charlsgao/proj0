@@ -19,9 +19,6 @@ def index(request):
 			elif request.path.endswith(".js"):
 				mime_type = "text/javascript"
 			return render_to_response('admin'+request.path,mimetype=mime_type)
-		elif request.path == "/TESTAPI/unitTests":
-			test = empty.unitTests()
-			return HttpResponse(json.dumps(test),content_type="application/json")
 			
 		else:
 			raise Http404
