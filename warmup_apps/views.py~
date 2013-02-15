@@ -12,9 +12,6 @@ empty = UserData()
 @csrf_exempt
 def index(request):
 	if request.method=="GET":
-		if request.path == "/TESTAPI/resetFixture":
-			errorcode = empty.resetFixture()
-			return HttpResponse(json.dumps({'errCode':errorcode}),content_type="application/json" )
 		if request.path in ["/client.html","/client.css","/client.js"]:
 			mime_type="text/html"
 			if request.path.endswith(".css"):
@@ -30,11 +27,18 @@ def index(request):
 			raise Http404
 	elif request.method=="POST":
 		if request.path == "/TESTAPI/resetFixture":
-			errorcode = empty.resetFixture()
-			return HttpResponse(json.dumps({'errCode':errorcode}),content_type="application/json" )
+			UserData.objects.all().delete()
+			#errorcode = empty.resetFixture()
+			return HttpResponse(json.dumps({'errCode':1}),content_type="application/json" )
 		elif request.path == "/TESTAPI/unitTests":
-			test = empty.unitTests()
-			return HttpResponse(json.dumps(test),content_type="application/json")
+			buf = StringIO.StringIO()
+			suite = unittest.TestLoader().loadTestsFromTestCase(Tests)
+			result = unittest.TextTestRunner(stream = buf, verbosity = 2).run(suite)
+
+			return  HttpResponse(json.dumps({"totalTests": result.testsRun, "nrFailed": len(result.failures), "output": buf.getvalue()}),content_type="application/json")
+			
+			#test = empty.unitTests()
+			#return HttpResponse(json.dumps(test),content_type="application/json")
 			
 		else:	
 			return do(request)

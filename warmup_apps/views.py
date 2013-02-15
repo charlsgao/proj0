@@ -5,6 +5,7 @@ from django.template import Context, loader, RequestContext
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import sys
 import json
+from testAdditional import Tests
 
 empty = UserData()
 
@@ -20,18 +21,29 @@ def index(request):
 				mime_type = "text/javascript"
 			return render_to_response('admin'+request.path,mimetype=mime_type)
 		elif request.path == "/TESTAPI/unitTests":
-			test = empty.unitTests()
-			return HttpResponse(json.dumps(test),content_type="application/json")
-			
+			#test = empty.unitTests()
+			#return HttpResponse(json.dumps(test),content_type="application/json")
+			buf = StringIO.StringIO()
+			suite = unittest.TestLoader().loadTestsFromTestCase(Tests)
+			result = unittest.TextTestRunner(stream = buf, verbosity = 2).run(suite)
+
+			return  HttpResponse(json.dumps({"totalTests": result.testsRun, "nrFailed": len(result.failures), "output": buf.getvalue()}),content_type="application/json")
 		else:
 			raise Http404
 	elif request.method=="POST":
 		if request.path == "/TESTAPI/resetFixture":
-			errorcode = empty.resetFixture()
-			return HttpResponse(json.dumps({'errCode':errorcode}),content_type="application/json" )
+			UserData.objects.all().delete()
+			#errorcode = empty.resetFixture()
+			return HttpResponse(json.dumps({'errCode':1}),content_type="application/json" )
 		elif request.path == "/TESTAPI/unitTests":
-			test = empty.unitTests()
-			return HttpResponse(json.dumps(test),content_type="application/json")
+			buf = StringIO.StringIO()
+			suite = unittest.TestLoader().loadTestsFromTestCase(Tests)
+			result = unittest.TextTestRunner(stream = buf, verbosity = 2).run(suite)
+
+			return  HttpResponse(json.dumps({"totalTests": result.testsRun, "nrFailed": len(result.failures), "output": buf.getvalue()}),content_type="application/json")
+			
+			#test = empty.unitTests()
+			#return HttpResponse(json.dumps(test),content_type="application/json")
 			
 		else:	
 			return do(request)
