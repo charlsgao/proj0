@@ -8,6 +8,10 @@ import sys
 import os
 import json
 
+import socket
+
+timeout = 100
+socket.setdefaulttimeout(timeout)
 
 class RestTestCase(unittest.TestCase):
     """
