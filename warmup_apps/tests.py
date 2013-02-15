@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append('/home/ubuntu/warmup_proj/')
+sys.path.append('/salty-castle-4218.herokuapp.com/')
 #sys.path.append('/home/ubuntu/')
 os.environ['DJANGO_SETTINGS_MODULE'] = "warmup_proj.settings"
 
