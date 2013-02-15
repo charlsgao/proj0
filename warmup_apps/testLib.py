@@ -21,7 +21,7 @@ class RestTestCase(unittest.TestCase):
     ERR_BAD_PASSWORD    = -4
     
     # Lookup the name of the server to test
-    serverToTest = "localhost"
+    serverToTest = "localhost:8000"
     if "TEST_SERVER" in os.environ:
         serverToTest = os.environ["TEST_SERVER"]
 
@@ -48,7 +48,7 @@ class RestTestCase(unittest.TestCase):
                 sys.exit(1)
             raise
 
-        self.conn.sock.settimeout(100.0) # Give time to the remote server to start and respond
+        self.conn.sock.settimeout(1000.0) # Give time to the remote server to start and respond
         resp = self.conn.getresponse()
         data_string = "<unknown"
         try:
