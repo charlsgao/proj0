@@ -1,5 +1,5 @@
 from django.db import models
-from testAdditional import TestLogin, TestAddUser
+from testAdditional import Tests
 import StringIO
 import unittest
 
@@ -77,7 +77,7 @@ class UserData(models.Model):
 
 	def unitTests(self):
 		buf = StringIO.StringIO()
-		suite = unittest.TestLoader().loadTestsFromTestCase(TestLogin, TestAddUser)
+		suite = unittest.TestLoader().loadTestsFromTestCase(Tests)
 		result = unittest.TextTestRunner(stream = buf, verbosity = 2).run(suite)
 
 		return {"totalTests": result.testsRun, "nrFailed": len(result.failures), "output": buf.getvalue()}
