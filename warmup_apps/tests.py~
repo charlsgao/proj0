@@ -1,7 +1,11 @@
+
 import os
+from os.path import abspath, dirname
 import sys
 
-
+# Set up django
+project_dir = abspath(dirname(dirname(__file__)))
+sys.path.insert(0, project_dir)
 #sys.path.append('salty-castle-4218.herokuapp.com/')
 #sys.path.append('/home/ubuntu/')
 os.environ['DJANGO_SETTINGS_MODULE'] = "warmup_proj.settings"
