@@ -1,6 +1,9 @@
 import os
 import sys
-sys.path.append('salty-castle-4218.herokuapp.com/')
+
+import dj_database_url
+DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))}
+#sys.path.append('salty-castle-4218.herokuapp.com/')
 #sys.path.append('/home/ubuntu/')
 os.environ['DJANGO_SETTINGS_MODULE'] = "warmup_proj.settings"
 
