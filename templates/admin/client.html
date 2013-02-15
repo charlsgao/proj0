@@ -18,7 +18,6 @@
       Password: <input id="login-password" type="password" name="pwd"><br>
       <input id="login-button" type="submit" value="Login">
       <input id="add-user-button" type="submit" value="Add User">
-      <input id="clear-button" type="submit" value="clear">
     </form>
   </center>
 </div>
@@ -107,14 +106,6 @@ $('#add-user-button').click(function() {
    username = $('#login-username').val()
    password = $('#login-password').val()
    json_request("/users/add", { user: username, password: password }, function(data) { return handle_add_user_response(data, username); }, function(err) {alert('error occurred on request'); });
-
-   return false;
-});
-
-$('#clear-button').click(function() {
-   username = $('#login-username').val()
-   password = $('#login-password').val()
-   json_request("/users/clear", { user: username, password: password }, function(data) { return handle_add_user_response(data, username); }, function(err) {alert('error occurred on request'); });
 
    return false;
 });

@@ -47,9 +47,6 @@ def do(request):
 		errorcode = empty.login(user["user"], user["password"])
 	elif request.path=="/users/add":
 		errorcode = empty.add(user["user"], user["password"])
-	elif request.path=="/users/clear":
-		errorcode = empty.resetFixture()
-		return HttpResponse(json.dumps({'errCode':errorcode}),content_type="application/json" )
 	if (errorcode==1):
 		u = UserData.objects.get(username = user["user"])
 		return HttpResponse(json.dumps({'errCode': errorcode, 'count': u.count}),content_type="application/json")
